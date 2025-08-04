@@ -65,11 +65,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
 
         // Deploy the TieredPointsHook to an address with proper hook flags
         uint160 flags = uint160(Hooks.AFTER_SWAP_FLAG);
-        deployCodeTo(
-            "TieredPointsHook.sol",
-            abi.encode(manager),
-            address(flags)
-        );
+        deployCodeTo("TieredPointsHook.sol", abi.encode(manager), address(flags));
         hook = TieredPointsHook(address(flags));
 
         // Approve tokens for spending on routers
@@ -77,7 +73,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
         token.approve(address(modifyLiquidityRouter), type(uint256).max);
 
         // Initialize the ETH-TOKEN pool with the hook attached
-        (key, ) = initPool(
+        (key,) = initPool(
             ethCurrency, // Currency 0 = ETH
             tokenCurrency, // Currency 1 = TOKEN
             hook, // Hook Contract
@@ -90,15 +86,10 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
         uint160 sqrtPriceAtTickUpper = TickMath.getSqrtPriceAtTick(84120);
 
         uint256 ethToAdd = 1 ether;
-        uint128 liquidityDelta = LiquidityAmounts.getLiquidityForAmount0(
-            TickMath.getSqrtPriceAtTick(82920),
-            sqrtPriceAtTickUpper,
-            ethToAdd
-        );
+        uint128 liquidityDelta =
+            LiquidityAmounts.getLiquidityForAmount0(TickMath.getSqrtPriceAtTick(82920), sqrtPriceAtTickUpper, ethToAdd);
         uint256 tokenToAdd = LiquidityAmounts.getAmount1ForLiquidity(
-            sqrtPriceAtTickLower,
-            TickMath.getSqrtPriceAtTick(82920),
-            liquidityDelta
+            sqrtPriceAtTickLower, TickMath.getSqrtPriceAtTick(82920), liquidityDelta
         );
 
         // Add liquidity to the pool
@@ -120,10 +111,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
      */
     function test_swap_tier0() public {
         uint256 poolIdUint = uint256(PoolId.unwrap(key.toId()));
-        uint256 pointsBalanceOriginal = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceOriginal = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance BEFORE swap
         uint256 tokensBeforeSwap = token.balanceOf(address(this));
@@ -141,17 +129,11 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
                 amountSpecified: -0.002 ether, // Exact input for output swap
                 sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
-            PoolSwapTest.TestSettings({
-                takeClaims: false,
-                settleUsingBurn: false
-            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             hookData
         );
 
-        uint256 pointsBalanceAfterSwap = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceAfterSwap = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance AFTER swap
         uint256 tokensAfterSwap = token.balanceOf(address(this));
@@ -171,10 +153,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
      */
     function test_swap_tier1() public {
         uint256 poolIdUint = uint256(PoolId.unwrap(key.toId()));
-        uint256 pointsBalanceOriginal = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceOriginal = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance BEFORE swap
         uint256 tokensBeforeSwap = token.balanceOf(address(this));
@@ -192,17 +171,11 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
                 amountSpecified: -0.01 ether, // Exact input for output swap
                 sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
-            PoolSwapTest.TestSettings({
-                takeClaims: false,
-                settleUsingBurn: false
-            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             hookData
         );
 
-        uint256 pointsBalanceAfterSwap = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceAfterSwap = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance AFTER swap
         uint256 tokensAfterSwap = token.balanceOf(address(this));
@@ -222,10 +195,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
      */
     function test_swap_tier2() public {
         uint256 poolIdUint = uint256(PoolId.unwrap(key.toId()));
-        uint256 pointsBalanceOriginal = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceOriginal = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance BEFORE swap
         uint256 tokensBeforeSwap = token.balanceOf(address(this));
@@ -243,17 +213,11 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
                 amountSpecified: -0.02 ether, // Exact input for output swap
                 sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
-            PoolSwapTest.TestSettings({
-                takeClaims: false,
-                settleUsingBurn: false
-            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             hookData
         );
 
-        uint256 pointsBalanceAfterSwap = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceAfterSwap = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance AFTER swap
         uint256 tokensAfterSwap = token.balanceOf(address(this));
@@ -273,10 +237,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
      */
     function test_swap_tier3() public {
         uint256 poolIdUint = uint256(PoolId.unwrap(key.toId()));
-        uint256 pointsBalanceOriginal = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceOriginal = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance BEFORE swap
         uint256 tokensBeforeSwap = token.balanceOf(address(this));
@@ -294,17 +255,11 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
                 amountSpecified: -0.1 ether, // Exact input for output swap
                 sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
-            PoolSwapTest.TestSettings({
-                takeClaims: false,
-                settleUsingBurn: false
-            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             hookData
         );
 
-        uint256 pointsBalanceAfterSwap = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceAfterSwap = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance AFTER swap
         uint256 tokensAfterSwap = token.balanceOf(address(this));
@@ -323,10 +278,7 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
      */
     function test_swap_tier4() public {
         uint256 poolIdUint = uint256(PoolId.unwrap(key.toId()));
-        uint256 pointsBalanceOriginal = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceOriginal = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance BEFORE swap
         uint256 tokensBeforeSwap = token.balanceOf(address(this));
@@ -344,17 +296,11 @@ contract TestTieredPointsHook is Test, Deployers, ERC1155TokenReceiver {
                 amountSpecified: -0.13 ether, // Exact input for output swap
                 sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
-            PoolSwapTest.TestSettings({
-                takeClaims: false,
-                settleUsingBurn: false
-            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             hookData
         );
 
-        uint256 pointsBalanceAfterSwap = hook.balanceOf(
-            address(this),
-            poolIdUint
-        );
+        uint256 pointsBalanceAfterSwap = hook.balanceOf(address(this), poolIdUint);
 
         // Log token balance AFTER swap
         uint256 tokensAfterSwap = token.balanceOf(address(this));

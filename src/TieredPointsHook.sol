@@ -33,29 +33,23 @@ contract TieredPointsHook is BaseHook, ERC1155 {
      * @notice Configure hook permissions - only afterSwap is enabled
      * @return permissions The hook permissions configuration
      */
-    function getHookPermissions()
-        public
-        pure
-        override
-        returns (Hooks.Permissions memory)
-    {
-        return
-            Hooks.Permissions({
-                beforeInitialize: false,
-                afterInitialize: false,
-                beforeAddLiquidity: false,
-                beforeRemoveLiquidity: false,
-                afterAddLiquidity: false,
-                afterRemoveLiquidity: false,
-                beforeSwap: false,
-                afterSwap: true, // Only afterSwap is enabled
-                beforeDonate: false,
-                afterDonate: false,
-                beforeSwapReturnDelta: false,
-                afterSwapReturnDelta: false,
-                afterAddLiquidityReturnDelta: false,
-                afterRemoveLiquidityReturnDelta: false
-            });
+    function getHookPermissions() public pure override returns (Hooks.Permissions memory) {
+        return Hooks.Permissions({
+            beforeInitialize: false,
+            afterInitialize: false,
+            beforeAddLiquidity: false,
+            beforeRemoveLiquidity: false,
+            afterAddLiquidity: false,
+            afterRemoveLiquidity: false,
+            beforeSwap: false,
+            afterSwap: true, // Only afterSwap is enabled
+            beforeDonate: false,
+            afterDonate: false,
+            beforeSwapReturnDelta: false,
+            afterSwapReturnDelta: false,
+            afterAddLiquidityReturnDelta: false,
+            afterRemoveLiquidityReturnDelta: false
+        });
     }
 
     /**
@@ -113,11 +107,7 @@ contract TieredPointsHook is BaseHook, ERC1155 {
      * @param hookData Contains the user address to assign points to
      * @param points The number of points to mint
      */
-    function _assignPoints(
-        PoolId poolId,
-        bytes calldata hookData,
-        uint256 points
-    ) internal {
+    function _assignPoints(PoolId poolId, bytes calldata hookData, uint256 points) internal {
         // Skip if no hook data provided
         if (hookData.length == 0) return;
 
@@ -140,9 +130,7 @@ contract TieredPointsHook is BaseHook, ERC1155 {
      * @param tokenAmount The amount of tokens received from the swap
      * @return percentage The tier percentage (0-20)
      */
-    function getTierPercentage(
-        uint256 tokenAmount
-    ) internal pure returns (uint256) {
+    function getTierPercentage(uint256 tokenAmount) internal pure returns (uint256) {
         if (tokenAmount <= 10 * 1e18) {
             return 0; // Tier 0: 0-10 tokens = 0% points
         } else if (tokenAmount <= 50 * 1e18) {
